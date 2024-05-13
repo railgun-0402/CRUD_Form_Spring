@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -20,14 +20,15 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
+       
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
 
       # Gradleのバッチに実行権限付与(デフォルトでは実行権限がない)
-      - name: Make Gradle Wrapper executable
-        working-directory: ./CRUDSample
+      - name: Make Gradle Wrapper executable        
         run: chmod +x ./gradlew
 
       #ビルドして単体テストレポート出力
       - name: Build with Gradle
-        working-directory: ./CRUDSample
         run: ./gradlew build
