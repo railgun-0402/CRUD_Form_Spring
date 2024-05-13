@@ -1,41 +1,48 @@
-name: Testing Spring Boot Code On Github Actions
+#ワークフローの名前
+name: Java CI with Gradle
 
+#メインブランチがプッシュされたときに実行される
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
 
+#リポジトリの権限
+permissions:
+  contents: read
+#一つのジョブ定義ごとに一つのコンテナが用意される
 jobs:
-  test:
+  #ジョブの定義名
+  build:
+    #ランナーの選択(実行環境のOS)
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+    #Githubに登録されているリポジトリをチェックアウトする
+    - uses: actions/checkout@v3
+    #Java 17の環境を構築(インストール)
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'adopt'
+    #Gradleのバッチに実行権限付与(デフォルトでは実行権限がない)
+    - name: Make Gradle executable
+      run: chmod +x ./gradlew
 
-      #Java 17の環境を構築(インストール)
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-       
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+    #ビルドして単体テストレポート出力(Jacoco)
+    - name: Build with Gradle(Jacoco)
+      run: ./gradlew build jacocoTestReport
 
-      # Gradleのバッチに実行権限付与(デフォルトでは実行権限がない)
-      - name: Make Gradle Wrapper executable        
-        run: chmod +x ./gradlew
+    #ユニットテスト結果をGitHubにアップロードする
+    - name: Archive unit test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: unit-test-report
+        path: build/reports/tests/test
 
-      #ビルドして単体テストレポート出力
-      - name: Build with Gradle
-        run: ./gradlew build
-
-      #ユニットテスト結果をGitHubにアップロードする
-      - name: Archive unit test results
-        uses: actions/upload-artifact@v2
-        with:
-          name: unit-test-report
-          path: build/reports/tests/test
+    # カバレッジレポート(Jacoco)をGitHubにアップロードする
+    - name: Archive coverage results
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-coverage-report
+        path: build/reports/jacoco/test/html
