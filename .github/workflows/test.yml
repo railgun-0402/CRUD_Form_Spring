@@ -27,4 +27,4 @@ jobs:
 
       #ビルドして単体テストレポート出力(Jacoco)
       - name: Build with Gradle(Jacoco)
-        run: ./gradlew build jacocoTestReport
+        run: gradle test
