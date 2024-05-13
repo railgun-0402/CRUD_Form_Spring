@@ -25,6 +25,6 @@ jobs:
       - name: Make Gradle executable
         run: chmod +x ./gradlew
 
-      #ビルドして単体テストレポート出力(Jacoco)
-      - name: Build with Gradle(Jacoco)
-        run: gradle test
+      #ビルドして単体テストレポート出力
+      - name: Build with Gradle
+        run: ./gradlew test --tests com.example.\*
