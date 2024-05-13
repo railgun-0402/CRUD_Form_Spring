@@ -29,9 +29,9 @@ jobs:
     - name: Make Gradle executable
       run: chmod +x ./gradlew
 
-    #ビルドして単体テストレポート出力(Jacoco)
-    - name: Build with Gradle(Jacoco)
-      run: ./gradlew build jacocoTestReport
+    #ビルドして単体テストレポート出力
+    - name: Build with Gradle
+      run: ./gradlew build
 
     #ユニットテスト結果をGitHubにアップロードする
     - name: Archive unit test results
