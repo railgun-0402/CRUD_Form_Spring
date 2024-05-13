@@ -24,8 +24,10 @@ jobs:
 
       # Gradleのバッチに実行権限付与(デフォルトでは実行権限がない)
       - name: Make Gradle Wrapper executable
+        working-directory: ./CRUDSample
         run: chmod +x ./gradlew
 
       #ビルドして単体テストレポート出力
       - name: Build with Gradle
+        working-directory: ./CRUDSample
         run: ./gradlew build
