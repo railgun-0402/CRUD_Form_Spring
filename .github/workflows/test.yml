@@ -32,3 +32,10 @@ jobs:
       #ビルドして単体テストレポート出力
       - name: Build with Gradle
         run: ./gradlew build
+
+      #ユニットテスト結果をGitHubにアップロードする
+      - name: Archive unit test results
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-test-report
+          path: build/reports/tests/test
